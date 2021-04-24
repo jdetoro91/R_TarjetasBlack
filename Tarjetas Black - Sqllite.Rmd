@@ -188,3 +188,27 @@ ORDER BY m.importe DESC
 LIMIT 5
 ```
 
+Exercise 21
+
+```{sql connection=con}
+SELECT *
+FROM comercio AS c
+  LEFT JOIN actividad AS a
+    ON c.id_actividad = a.id_actividad
+WHERE a.actividad IS NULL
+ORDER BY c.id_comercio ASC
+```
+
+Exercise 22
+
+```{sql connection=con}
+SELECT c.nombre, a.actividad, round(sum(m.importe),2) AS "Importe"
+FROM consejero AS c
+  INNER JOIN movimiento AS m ON c.id_consejero = m.id_consejero
+  INNER JOIN comercio AS com ON m.id_comercio = com.id_comercio
+  INNER JOIN actividad AS a ON com.id_actividad = a.id_actividad
+GROUP BY c.nombre, a.actividad
+ORDER BY "Importe" DESC
+LIMIT 5
+```
+
