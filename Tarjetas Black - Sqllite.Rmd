@@ -161,3 +161,30 @@ ORDER BY "Numero actividades" DESC, comercio ASC
 LIMIT 5
 ```
 
+```{sql connection=con}
+SELECT funcion, organizacion, count(*) as "Count"
+FROM consejero
+GROUP BY funcion, organizacion
+```
+
+```{sql connection=con}
+-- Ejercicio 16
+SELECT min(fecha) as "Inicio",
+  max(fecha) as "Fin",
+  "Fin" - "Inicio" as "Número de días"
+FROM movimiento
+```
+
+## JOINS
+
+Exercise 20
+
+```{sql connection=con}
+SELECT c.nombre, m.fecha, m.importe
+FROM movimiento AS m
+  INNER JOIN consejero AS c
+    ON m.id_consejero = c.id_consejero
+ORDER BY m.importe DESC
+LIMIT 5
+```
+
