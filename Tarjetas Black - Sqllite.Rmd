@@ -32,3 +32,132 @@ SELECT *
 FROM consejero
 LIMIT 5
 ```
+
+
+```{sql connection=con}
+SELECT 
+  id_movimiento,
+  importe,
+  round(importe*0.21,2) as Iva
+FROM movimiento
+ORDER BY fecha ASC, id_movimiento ASC
+LIMIT 5
+```
+
+```{sql connection=con}
+SELECT id_consejero, nombre || " es " || funcion AS "Nombre y Cargo"
+FROM consejero
+ORDER BY id_consejero DESC
+LIMIT 5
+```
+
+```{sql connection=con}
+SELECT id_consejero, nombre
+FROM consejero
+WHERE organizacion = 'Partido Popular'
+ORDER BY nombre ASC
+LIMIT 5
+```
+
+```{sql connection=con}
+SELECT id_movimiento, fecha, hora, minuto, importe, id_consejero, id_comercio
+FROM movimiento
+WHERE importe BETWEEN 1023 AND 1400
+ORDER BY importe ASC
+LIMIT 5
+```
+
+```{sql connection=con}
+SELECT id_consejero, nombre, funcion, organizacion
+FROM consejero
+WHERE id_consejero IN (1,2,3,5,7,10)
+ORDER BY id_consejero DESC
+```
+
+```{sql connection=con}
+SELECT id_comercio, comercio, actividad_completa, id_actividad
+FROM comercio
+WHERE id_actividad  NULL
+```
+
+Use `COLLATE NOCASE` to order independently Capital and minus letters
+
+```{sql connection=con}
+SELECT *
+FROM comercio
+WHERE comercio is NOT NULL and id_comercio not in (650, 6788)
+ORDER BY comercio COLLATE NOCASE DESC
+LIMIT 5
+```
+
+```{sql connection=con}
+SELECT *
+FROM consejero
+WHERE nombre LIKE 'a% r%'
+ORDER BY nombre ASC
+```
+
+## Union Tables
+
+```{sql connection=con}
+SELECT *
+FROM consejero
+WHERE id_consejero <= 5
+UNION ALL
+SELECT *
+FROM consejero
+WHERE id_consejero = 3
+ORDER BY id_consejero ASC
+```
+
+## AGRUPACIONES
+
+
+### DISTINCT
+
+```{sql connection=con}
+SELECT DISTINCT funcion, organizacion
+FROM consejero
+```
+
+
+### OTHERS
+
+```{sql connection=con}
+SELECT count(*)
+FROM consejero
+```
+
+```{sql connection=con}
+SELECT avg(importe)
+FROM movimiento
+```
+
+```{sql connection=con}
+SELECT count(*) as "Total movimientos",
+  min(importe) as "Importe mínimo",
+  max(importe) as "Importe máximo",
+  round(avg(importe),2) as "Importe medio"
+FROM movimiento
+WHERE importe > 0
+```
+
+```{sql connection=con}
+SELECT hora, round(sum(importe),2) AS "suma"
+FROM movimiento
+WHERE importe > 0
+GROUP BY hora
+ORDER BY suma DESC
+LIMIT 5
+```
+
+```{sql connection=con}
+SELECT comercio, id_actividad, count(*) AS "Numero actividades"
+FROM comercio
+WHERE comercio IS NOT NULL
+GROUP BY comercio, id_actividad
+HAVING count(*) > 1
+ORDER BY "Numero actividades" DESC, comercio ASC
+LIMIT 5
+```
+
